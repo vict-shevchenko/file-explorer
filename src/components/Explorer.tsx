@@ -3,8 +3,6 @@ import { fileExplorerStore } from '../store/FileExplorer.store';
 import { Flex, List, Spin } from 'antd';
 import { FileOutlined, FolderFilled } from '@ant-design/icons';
 
-// file and f600px;id do nor overlap
-
 export const Explorer = observer(() => {
 	return (
 		<div>

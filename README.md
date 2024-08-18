@@ -1,50 +1,94 @@
-# React + TypeScript + Vite
+# File Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is demo application
 
-Currently, two official plugins are available:
+## Out of scope
+- Ordering by (name/last modified date)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Assumptions
+- IDs of files and folders do not overlap
+- IDs of files and folders represented as strings
 
-## Expanding the ESLint configuration
+## Data store structure
+- For this case, flat structure of data in store works better. It allows to pick any folder to display by ID with O(n) complexity
+- Full store example can be seen if file *src/store/FileExplorer.store.ts*
+```
+export type File = {
+	id: string;
+	name: string;
+	extension: string;
+	size: number;
+	createdAt: Date;
+	modifiedAt: Date;
+	type: 'file';
+	parentId: string | null;
+};
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+export type Folder = {
+	id: string;
+	name: string;
+	createdAt: Date;
+	modifiedAt: Date;
+	type: 'folder';
+	parentId: string | null;
+};
 
-- Configure the top-level `parserOptions` property like this:
+type FolderContent = (File | Folder)[];
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+folders: { [key: string]: FolderContent };
+
+// Example
+  folders: {
+    '/': [ //root folder
+      {
+        id: '1',
+        name: 'Movies',
+        createdAt: new Date('2024-01-01'),
+        modifiedAt: new Date('2024-01-05'),
+        type: 'folder',
+        parentId: null,
+      },
+      {
+        id: '2',
+        name: 'Music',
+        createdAt: new Date('2024-01-01'),
+        modifiedAt: new Date('2024-01-05'),
+        type: 'folder',
+        parentId: null,
+      },
+    ]
+    '1': [
+        {
+        id: '1-1',
+        name: 'Action',
+
+        createdAt: new Date('2024-01-02'),
+        modifiedAt: new Date('2024-01-06'),
+        type: 'folder',
+        parentId: '1',
+      },
+      {
+        id: '1-2',
+        name: 'Comedy',
+
+        createdAt: new Date('2024-01-02'),
+        modifiedAt: new Date('2024-01-06'),
+        type: 'folder',
+        parentId: '1',
+      },
+      {
+        id: '1-3',
+        name: 'Drama',
+
+        createdAt: new Date('2024-01-02'),
+        modifiedAt: new Date('2024-01-06'),
+        type: 'folder',
+        parentId: '1',
+      }
+    ]
+  }
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## API
+  - request for fetching content of folder can be done via `/catalog/folder_id` and not require to pass full path.
