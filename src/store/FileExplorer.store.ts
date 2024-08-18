@@ -7,6 +7,8 @@ class FileExplorerStore {
 	@observable accessor folders: { [key: string]: FolderContent };
 	@observable accessor loading: boolean = false;
 
+	// using history and historyIndex to keep information about the current folder id to be displayed
+	// and to traverse back and forth with navigation buttons
 	@observable accessor history: string[] = [];
 	@observable accessor historyIndex: number = -1;
 
@@ -16,6 +18,7 @@ class FileExplorerStore {
 	constructor() {
 		this.folders = {};
 
+		// run search request each time searchText changes
 		autorun(
 			() => {
 				this.search(this.searchText);
@@ -24,6 +27,7 @@ class FileExplorerStore {
 		);
 	}
 
+	// automatically select the folder to be displayed in UI.
 	@computed
 	get viewFolder() {
 		if (this.historyIndex < 0) {
@@ -53,6 +57,7 @@ class FileExplorerStore {
 		this.history.push(folderIdToAdd);
 	}
 
+	// callback when user click on folder name to go inside the folder
 	@action.bound
 	async openFolder(folderId?: string) {
 		const folderInternalId = folderId || ROOT_FOLDER_KEY;
@@ -76,6 +81,7 @@ class FileExplorerStore {
 		this.setHistoryIndex(this.historyIndex + 1);
 	}
 
+	// callback to execute search and fill in searchResults data
 	@action.bound
 	async search(searchText: string) {
 		if (searchText === '') {
