@@ -12,7 +12,7 @@ This is demo application
 ## Data store structure
 - For this case, flat structure of data in store works better. It allows to pick any folder to display by ID with O(n) complexity
 - Full store example can be seen if file *src/store/FileExplorer.store.ts*
-```
+```typescipt
 export type File = {
 	id: string;
 	name: string;
