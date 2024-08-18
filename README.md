@@ -4,6 +4,7 @@ This is demo application
 
 ## Out of scope
 - Ordering by (name/last modified date)
+- Pass store to components via React Context API (for now store is just an external variable)
 
 ## Assumptions
 - IDs of files and folders do not overlap
