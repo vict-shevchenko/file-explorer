@@ -10,7 +10,7 @@ This is demo application
 - IDs of files and folders represented as strings
 
 ## Data store structure
-- For this case, flat structure of data in store works better. It allows to pick any folder to display by ID with O(n) complexity
+- For this case, flat structure of folders in store works better than tree structure. It allows to pick any folder to display by ID with O(n) complexity
 - Full store example can be seen if file *src/store/FileExplorer.store.ts*
 ```typescipt
 export type File = {
